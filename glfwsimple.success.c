@@ -159,7 +159,6 @@ int main(void)
 
         glUseProgram(program);
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
-        //glUniform4f(RLGL.State.currentShaderLocs[RL_SHADER_LOC_COLOR_DIFFUSE], 1.0f, 1.0f, 1.0f, 1.0f);
         glUniform4f(utime_loc, 0.0f, 0.0f, 0.0f, utime/9);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -172,5 +171,3 @@ int main(void)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-
-//! [code]

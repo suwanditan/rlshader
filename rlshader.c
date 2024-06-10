@@ -138,7 +138,6 @@ int main(void)
     rlClearColor(0, 0, 0, 0);                   // Define clear color
     rlEnableDepthTest();                          // Enable DEPTH_TEST for 3D
     
-    //rlClearColor(0, 0, 0, 255);
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (GLEW_OK != err)
@@ -146,10 +145,6 @@ int main(void)
         /* Problem: glewInit failed, something is seriously wrong. */
         fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
     }
-    
-    //glEnable(GL_DEPTH_TEST); 
-    //glDepthFunc(GL_LESS);
-    
     
     Shader shader = LoadShader(TextFormat("resources/shaders/glsl%i/point_particle.vs", GLSL_VERSION),
                                TextFormat("resources/shaders/glsl%i/point_particle.fs", GLSL_VERSION));
@@ -170,42 +165,16 @@ int main(void)
         // Give each particle a slightly different period. But don't spread it to much. 
         // This way the particles line up every so often and you get a glimps of what is going on.
         particles[i].period = (float)GetRandomValue(10, 30)/5.0f;
-        //printf("num-%d\n", i);
     }
-/*
-    Matrix matProj = MatrixOrtho(0.0, screenWidth, screenHeight, 0.0, 0.0, 1.0);
-    Matrix matView = MatrixIdentity();
-
-    rlSetMatrixModelview(matView);    // Set internal modelview matrix (default shader)
-    rlSetMatrixProjection(matProj);   // Set internal projection matrix (default shader)
-  */  
 
     rlClearColor(0, 0, 0, 0);                   // Define clear color
     rlEnableDepthTest();                          // Enable DEPTH_TEST for 3D
-    /*
-    GLenum err = glewInit();
-    if (GLEW_OK != err)
-    {
-        / * Problem: glewInit failed, something is seriously wrong. * /
-        fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-    }
-    */
-    //glEnable(GL_DEPTH_TEST); 
-    //glDepthFunc(GL_LESS);
-    
-    
-    
+
     // Create a plain OpenGL vertex buffer with the data and an vertex array object 
     // that feeds the data from the buffer into the vertexPosition shader attribute.
-    //rlClearScreenBuffers();             // Clear current framebuffer
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);       
     GLuint vao = 0;
     GLuint vbo = 0;
-    
-        
-    
     unsigned int vao2 = rlLoadVertexArray();
-    //unsigned int vbo2 = rlLoadVertexBuffer(particles, MAX_PARTICLES*sizeof(Particle), false);
     
     glGenVertexArrays(3, &vao);
     glBindVertexArray(vao);    
@@ -215,8 +184,6 @@ int main(void)
         
         // Note: LoadShader() automatically fetches the attribute index of "vertexPosition" and saves it in shader.locs[SHADER_LOC_VERTEX_POSITION]
         rlSetVertexAttribute(shader.locs[SHADER_LOC_VERTEX_POSITION], 3, GL_FLOAT, GL_FALSE, 0, 0);
-        //shader.locs[SHADER_LOC_VERTEX_POSITION]
-        //GetShaderLocation(shader, "vertex_position")
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -228,7 +195,6 @@ int main(void)
     //--------------------------------------------------------------------------------------
     unsigned int framesCounter = 0;
     // Main game loop
-    //while (!WindowShouldClose())    // Detect window close button or ESC key
     while (!glfwWindowShouldClose(window))
     {
         framesCounter++; //printf("frame: %d\n", framesCounter); 
@@ -242,13 +208,9 @@ int main(void)
         
         // Draw
         //----------------------------------------------------------------------------------
-        //BeginDrawing();
             ClearBackground(BLANK);
 
             DrawRectangle(10, 10, 780, 30, RAYWHITE);
-            //DrawRectangle(10, 49, 780, 30, RAYWHITE);
-            //DrawText(TextFormat("%zu particles in one vertex buffer", MAX_PARTICLES), 20, 20, 10, RAYWHITE);
-            
             rlDrawRenderBatchActive();      // Draw iternal buffers data (previous draw calls)
 
             // Switch to plain OpenGL
@@ -263,7 +225,6 @@ int main(void)
                 // Get the current modelview and projection matrix so the particle system is displayed and transformed
                 //Matrix modelViewProjection = MatrixMultiply(rlGetMatrixModelview(), rlGetMatrixProjection());
                 //modelViewProjection
-                //shader.locs[SHADER_LOC_MATRIX_MVP]
                 glUniformMatrix4fv(shader.locs[SHADER_LOC_MATRIX_MVP], 1, false, MatrixToFloat(matProj));
 
                 glBindVertexArray(vao);
@@ -272,8 +233,6 @@ int main(void)
                 
             glUseProgram(0);
             //------------------------------------------------------------------------------
-            
-            //DrawFPS( 100, 10);
             
         //EndDrawing();
         //----------------------------------------------------------------------------------

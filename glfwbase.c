@@ -102,19 +102,6 @@ static const struct
     { -29.6f, 19.f, 0.f, 0.f, 1.f }
 };
 
-/*
-static const struct
-{
-    float x, y;
-    float r, g, b;
-} vertices[3] =
-{
-    { -0.6f, -0.4f, 1.f, 0.f, 0.f },
-    {  0.6f, -0.4f, 0.f, 1.f, 0.f },
-    {   0.f,  0.6f, 0.f, 0.f, 1.f }
-};
-*/
-
 /* Frustum configuration */
 static GLfloat view_angle = 45.0f;
 static GLfloat aspect_ratio = 16.0f/9.0f;
@@ -173,8 +160,6 @@ int main(int argc, char** argv)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
     window = glfwCreateWindow(800, 600, "GLFW OpenGL3 Heightmap demo", NULL, NULL);
     if (! window )
@@ -237,8 +222,6 @@ int main(int argc, char** argv)
     /* Create the vbo to store all the information for the grid and the height */
 
     /* setup the scene ready for rendering */
-    //glfwGetFramebufferSize(window, &width, &height);
-    //glViewport(0, 0, width, height);
     glClearColor(0.0f, 0.0f, 0.0f, 255.0f);
     float res[2] = {width, height};
     glUniform2fv(uResLoc, 1, &res);
@@ -260,15 +243,13 @@ int main(int argc, char** argv)
         ratio = width / (float) height;
 
         glViewport(0, 0, width, height);
-        //glClear(GL_COLOR_BUFFER_BIT);
         
         dt = glfwGetTime();
         mat4x4_identity(m);
         mat4x4_rotate_Z(m, m, dt);
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
-        
-        
+                
         float uTime = dt;//(dt - last_update_time);
         glUniform1fv(uTimeLoc, 1, &uTime);
         
@@ -276,36 +257,15 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
         
         glUseProgram(shader_program);
-            //glUniformMatrix4fv(uloc_project, 1, GL_FALSE, (const GLfloat*) p);
-            //glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, (const GLfloat*) m);
             glBindVertexArray(vertex_buffer);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-        //glDrawElements(GL_LINES, 2* MAP_NUM_LINES , GL_UNSIGNED_INT, 0);
         glUseProgram(0);
         
         /* display and process events through callbacks */
         glfwSwapBuffers(window);
         glfwPollEvents();
-        /* Check the frame rate and update the heightmap if needed */
-        /*
-        dt = glfwGetTime();
-        if ((dt - last_update_time) > 0.2)
-        {
-            / * generate the next iteration of the heightmap * /
-            if (iter < MAX_ITER)
-            {
-                
-                
-                //UpdateMap(NUM_ITER_AT_A_TIME);
-                //UpdateMesh();
-                iter += NUM_ITER_AT_A_TIME;
-            }
-            last_update_time = dt;
-            frame = 0;
-        } */       
     }
 
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

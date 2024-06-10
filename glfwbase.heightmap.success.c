@@ -444,7 +444,6 @@ int main(int argc, char** argv)
 
     /* Prepare opengl resources for rendering */
     shader_program = make_shader_program(vertex_shader_text, fragment_shader_text);
-
     if (shader_program == 0u)
     {
         glfwTerminate();
@@ -489,14 +488,11 @@ int main(int argc, char** argv)
     frame = 0;
     iter = 0;
     last_update_time = glfwGetTime();
-
     while (!glfwWindowShouldClose(window))
     {
         ++frame;
-        //printf("frame: %d\n", frame);
         /* render the next frame */
-        glClear(GL_COLOR_BUFFER_BIT);
-        
+        glClear(GL_COLOR_BUFFER_BIT);        
         glDrawElements(GL_LINES, 2* MAP_NUM_LINES , GL_UNSIGNED_INT, 0);
 
         /* display and process events through callbacks */
@@ -519,8 +515,6 @@ int main(int argc, char** argv)
             last_update_time = dt;
             frame = 0;
         }
-        
-        
     }
 
     glfwTerminate();

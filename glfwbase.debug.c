@@ -311,10 +311,7 @@ int main(void)
     gladLoadGL(glfwGetProcAddress);
     glfwSwapInterval(0);
     
-    //glShadeModel(GL_SMOOTH);
-    //glEnable(GL_DEPTH_TEST);
-    glPointSize(99.0);
-    //glClearColor(245, 245, 245, 255);
+    glPointSize(9.0);
     
     particles[MAX_PARTICLES] = (Particle){0};
     for (int i=0; i<MAX_PARTICLES; i++)
@@ -325,7 +322,6 @@ int main(void)
         // Give each particle a slightly different period. But don't spread it to much. 
         // This way the particles line up every so often and you get a glimps of what is going on.
         particles[i].period = (float)GetRandomValue(10, 30)/5.0f;
-        //printf("num-%d\n", i);
     }
     
     // NOTE: OpenGL error checks have been omitted for brevity
@@ -398,11 +394,8 @@ int main(void)
     glBindAttribLocation(program, 3, RL_DEFAULT_SHADER_ATTRIB_NAME_COLOR);
     glBindAttribLocation(program, 4, RL_DEFAULT_SHADER_ATTRIB_NAME_TANGENT);
     glBindAttribLocation(program, 5, RL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD2);
-    
-    
+        
     glLinkProgram(program);
-
-    //GLint success = 0;
     glGetProgramiv(program, GL_LINK_STATUS, &success);
     if (success == GL_FALSE)
     {
@@ -411,7 +404,6 @@ int main(void)
         
         int maxLength = 0;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
-
         if (maxLength > 0)
         {
             int length = 0;
@@ -433,19 +425,12 @@ int main(void)
     res_loc = glGetUniformLocation(program, "uResolution");
     
     printf("\nloc: %d %d %d %d %d\n\n", mvp_location, vpos_location, vcol_location, utime_loc, res_loc );
-    //exit(1);
     float res[2] = {screenWidth, screenHeight};
     glUniform2fv(res_loc, 1, (float *)&res);
 
     glEnableVertexAttribArray(vpos_location);
     glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
                           sizeof(particles[0]), (void*) 0);
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
-    /*
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) (sizeof(float) * 2));
-    */
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -457,27 +442,14 @@ int main(void)
         GLfloat utime;
         int width, height;
         mat4x4 m, p, mvp, projection;
-        
-        /*
-        glMatrixMode(GL_PROJECTION);
-        mat4x4_perspective(projection,
-                           60.f * (float) M_PI / 180.f,
-                           ratio,
-                           1.f, 1024.f);
-        glLoadMatrixf((const GLfloat*) projection);
-        */
-        //glMatrixMode(GL_MODELVIEW);
-        //glLoadIdentity();
-    
+
         glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
         ratio = screenWidth / (float) screenHeight;
-        //printf("wsize: %d  %d ratio: %.2f \n", screenWidth, screenHeight, ratio);
         glViewport(0, 0, screenWidth, screenHeight);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         utime = (float) glfwGetTime();
         mat4x4_identity(m);
-        //mat4x4_rotate_Z(m, m, utime);
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
     
@@ -486,7 +458,6 @@ int main(void)
         float ctmp[4] = {color.x, color.y, color.z, color.w };
         glUniform4fv(vcol_location, 1, (float *)&ctmp);
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
-        //glUniform4f(RLGL.State.currentShaderLocs[RL_SHADER_LOC_COLOR_DIFFUSE], 1.0f, 1.0f, 1.0f, 1.0f);
         glUniform4f(utime_loc, 1.0f, 1.0f, 1.0f, utime/9);
         glBindVertexArray(vbo);
             glDrawArrays(GL_POINTS, 0, MAX_PARTICLES);
@@ -502,5 +473,3 @@ int main(void)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-
-//! [code]
